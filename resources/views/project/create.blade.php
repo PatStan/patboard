@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('content')
+@section('body')
     <form method="POST" action="/projects" class="container">
         @csrf
         <h1 class="heading is-1">Create a Project</h1>

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('content')
+@section('body')
 <h1>{{ $project->title }}</h1>
 <div>
     {{ $project->description }}

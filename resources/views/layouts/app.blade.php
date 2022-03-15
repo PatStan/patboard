@@ -28,8 +28,8 @@
             </header>
 
             <!-- Page Content -->
-            <main>
-                @yield('content')
+            <main class="container mx-auto py-4">
+                @yield('body')
             </main>
         </div>
     </body>

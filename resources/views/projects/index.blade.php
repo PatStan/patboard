@@ -1,21 +1,24 @@
 @extends('layouts.app')
 
 @section('header')
-    <h1 class="text-green-600 font-bold text-xl">Patboard</h1>
+    <h1 class="text-green-800 font-bold text-5xl">Patboard</h1>
 @endsection
 
-@section('content')
-    <div class="flex items-center">
-        <a href="/projects/create" class="font-semibold">Create New Project</a>
+@section('body')
+    <div class="m-8">
+    <a href="projects/create" class="font-semibold text-indigo-600">Create New Project</a>
     </div>
 
-    <ul>
+    <div class="ml-10 pt-3 flex">
         @forelse($projects as $project)
-            <li>
-                <a href="{{ $project->path() }}">{{ $project->title }}</a>
-            </li>
+            <div class="bg-white mr-4 rounded shadow">
+                <h3>{{ $project->title }}</h3>
+
+                <div>{{ $project->description }}</div>
+            </div>
         @empty
-            <li>No projects yet.</li>
+            <div>No projects yet.</div>
         @endforelse
-    </ul>
+    </div>
 @endsection
+
