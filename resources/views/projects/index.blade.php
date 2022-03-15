@@ -9,12 +9,12 @@
     <a href="projects/create" class="font-semibold text-indigo-600">Create New Project</a>
     </div>
 
-    <div class="ml-10 pt-3 flex">
+    <div class="ml-10 flex">
         @forelse($projects as $project)
-            <div class="bg-white mr-4 rounded shadow">
-                <h3>{{ $project->title }}</h3>
+            <div class="bg-white p-5 mr-4 rounded shadow w-1/3" style="height: 200px">
+                <h3 class="text-xl py-4">{{ $project->title }}</h3>
 
-                <div>{{ $project->description }}</div>
+                <div class="text-gray-400">{{ Illuminate\Support\Str::limit($project->description, 100) }}</div>
             </div>
         @empty
             <div>No projects yet.</div>
