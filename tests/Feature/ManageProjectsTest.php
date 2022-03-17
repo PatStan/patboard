@@ -30,6 +30,8 @@ class ManageProjectsTest extends TestCase
      * @test
      * @return void
      */
+
+    //test is currently broken and needs to handle the redirect to the new project
     public function a_user_can_create_a_project()
     {
         $this->withoutExceptionHandling();

@@ -2,7 +2,7 @@
 
 @section('header')
     <div class="flex items-center justify-between">
-        <h2 class="text-slate-400 font-bold text-2xl text-opacity-80">My Projects</h2>
+        <h2 class="text-slate-700 font-bold text-2xl text-opacity-80">My Projects</h2>
         <div class="">
             <a href="/projects/create" class="button">New Project</a>
         </div>
