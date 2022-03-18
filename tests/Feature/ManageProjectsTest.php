@@ -31,7 +31,6 @@ class ManageProjectsTest extends TestCase
      * @return void
      */
 
-    //test is currently broken and needs to handle the redirect to the new project
     public function a_user_can_create_a_project()
     {
         $this->withoutExceptionHandling();
@@ -39,12 +38,15 @@ class ManageProjectsTest extends TestCase
 
         $this->get('/projects/create')->assertStatus(200);
 
+        //change to raw and redirect using project->path()
         $attributes = [
             'title' => $this->faker->sentence(),
             'description' => $this->faker->paragraph()
         ];
 
-        $this->post('/projects', $attributes)->assertRedirect('/projects');
+        $response = $this->post('/projects', $attributes);
+
+        $response->assertRedirect(Project::where($attributes)->first()->path());
 
         $this->assertDatabaseHas('projects', $attributes);
 
