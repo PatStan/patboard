@@ -10,6 +10,8 @@ class ProjectsController extends Controller
     public function index()
     {
         $projects = auth()->user()->projects;
+        //auth()->user()->projects()->orderByDesc('updated_at')->get() DB query, eloquent builder instance
+        //auth()->user()->projects->sortByDesc('updated_at') sorts collection at PHP level
 
         return view('projects.index', compact('projects'));
     }
