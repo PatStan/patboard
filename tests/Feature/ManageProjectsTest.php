@@ -38,19 +38,40 @@ class ManageProjectsTest extends TestCase
 
         $this->get('/projects/create')->assertStatus(200);
 
-        //change to raw and redirect using project->path()
         $attributes = [
             'title' => $this->faker->sentence(),
-            'description' => $this->faker->paragraph()
+            'description' => $this->faker->sentence(),
+            'notes' => 'notes notes'
         ];
 
         $response = $this->post('/projects', $attributes);
 
-        $response->assertRedirect(Project::where($attributes)->first()->path());
+        $project = Project::where($attributes)->first();
+
+        $response->assertRedirect($project->path());
 
         $this->assertDatabaseHas('projects', $attributes);
 
-        $this->get('/projects')->assertSee($attributes['title']);
+        $this->get($project->path())
+            ->assertSee($attributes['title'])
+            ->assertSee($attributes['description'])
+            ->assertSee($attributes['notes']);
+    }
+
+    /** @test */
+    public function a_user_can_update_a_project()
+    {
+        $this->withoutExceptionHandling();
+        $this->actingAs(User::factory()->create());
+
+        $project = Project::factory()->create(['user_id' => auth()->id()]);
+
+        $this->patch($project->path(), [
+           'notes' => 'changed'
+        ])->assertRedirect($project->path());
+
+        $this->assertDatabaseHas('projects', ['notes' => 'changed']);
+
     }
 
     /** @test */
@@ -76,7 +97,6 @@ class ManageProjectsTest extends TestCase
     public function a_user_can_view_their_project()
     {
         $this->actingAs(User::factory()->create());
-        $this->withoutExceptionHandling();
 
         $project = Project::factory()->create(['user_id' => auth()->id()]);
 
@@ -93,5 +113,15 @@ class ManageProjectsTest extends TestCase
         $project = Project::factory()->create();
 
         $this->get($project->path())->assertStatus(403);
+    }
+
+    /** @test */
+    public function an_authenticated_user_cannot_update_others_projects()
+    {
+        $this->actingAs(User::factory()->create());
+
+        $project = Project::factory()->create();
+
+        $this->patch($project->path(), [])->assertStatus(403);
     }
 }

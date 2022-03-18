@@ -16,12 +16,16 @@ class ProjectsController extends Controller
         return view('projects.index', compact('projects'));
     }
 
+    /**
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function show(Project $project)
     {
-        if (auth()->user()->isNot($project->user))
-        {
-            abort(403);
-        }
+        $this->authorize('update', $project);
+//        if (auth()->user()->isNot($project->user))
+//        {
+//            abort(403);
+//        }
 
         return view('projects.show', ['project' => $project]);
     }
@@ -35,12 +39,28 @@ class ProjectsController extends Controller
     {
         $attributes = request()->validate([
             'title' => 'required',
-            'description' => 'required'
+            'description' => 'required|max:100', //TODO: come back to the max:100
+            'notes' => 'min:3'
         ]);
 
         $project = auth()->user()->projects()->create($attributes);
 
-        //redirect
+        return redirect($project->path());
+    }
+
+    /**
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function update(Project $project)
+    {
+        $this->authorize('update', $project);
+//        if (auth()->user()->isNot($project->user))
+//        {
+//            abort(403);
+//        }
+
+        $project->update(request(['notes']));
+
         return redirect($project->path());
     }
 }
