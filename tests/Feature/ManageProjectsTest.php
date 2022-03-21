@@ -8,6 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Str;
 use Tests\TestCase;
+use Facades\Tests\Setup\ProjectTaskFactory;
 
 class ManageProjectsTest extends TestCase
 {
@@ -33,7 +34,6 @@ class ManageProjectsTest extends TestCase
 
     public function a_user_can_create_a_project()
     {
-        $this->withoutExceptionHandling();
         $this->actingAs(User::factory()->create());
 
         $this->get('/projects/create')->assertStatus(200);
@@ -50,8 +50,6 @@ class ManageProjectsTest extends TestCase
 
         $response->assertRedirect($project->path());
 
-        $this->assertDatabaseHas('projects', $attributes);
-
         $this->get($project->path())
             ->assertSee($attributes['title'])
             ->assertSee($attributes['description'])
@@ -61,17 +59,25 @@ class ManageProjectsTest extends TestCase
     /** @test */
     public function a_user_can_update_a_project()
     {
-        $this->withoutExceptionHandling();
-        $this->actingAs(User::factory()->create());
+        $project = ProjectTaskFactory::create();
 
-        $project = Project::factory()->create(['user_id' => auth()->id()]);
+        $this->actingAs($project->user)
+            ->patch($project->path(), $attributes = ['notes' => 'changed'])
+            ->assertRedirect($project->path());
 
-        $this->patch($project->path(), [
-           'notes' => 'changed'
-        ])->assertRedirect($project->path());
+        $this->assertDatabaseHas('projects', $attributes);
 
-        $this->assertDatabaseHas('projects', ['notes' => 'changed']);
+    }
 
+    /** @test */
+    public function a_user_can_view_their_project()
+    {
+        $project = ProjectTaskFactory::create();
+
+        $this->actingAs($project->user)
+            ->get($project->path())
+            ->assertSee($project->title)
+            ->assertSee(Str::limit($project->description, 100));
     }
 
     /** @test */
@@ -90,19 +96,6 @@ class ManageProjectsTest extends TestCase
 
         $attributes = Project::factory()->raw(['description' => '']);
         $this->post('/projects', $attributes)->assertSessionHasErrors('description');
-    }
-
-
-    /** @test */
-    public function a_user_can_view_their_project()
-    {
-        $this->actingAs(User::factory()->create());
-
-        $project = Project::factory()->create(['user_id' => auth()->id()]);
-
-        $this->get($project->path())
-            ->assertSee($project->title)
-            ->assertSee(Str::limit($project->description, 100));
     }
 
     /** @test */
