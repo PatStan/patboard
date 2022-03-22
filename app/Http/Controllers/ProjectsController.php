@@ -65,9 +65,9 @@ class ProjectsController extends Controller
     public function validateProjectRequest(): array
     {
         return request()->validate([
-            'title' => 'required',
-            'description' => 'required|max:100', //TODO: come back to the max:100
-            'notes' => 'min:3'
+            'title' => 'sometimes|required',
+            'description' => 'sometimes|required|max:100', //TODO: come back to the max:100
+            'notes' => 'nullable'
         ]);
     }
 }
