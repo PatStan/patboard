@@ -22,30 +22,27 @@ class ProjectsController extends Controller
     public function show(Project $project)
     {
         $this->authorize('update', $project);
-//        if (auth()->user()->isNot($project->user))
-//        {
-//            abort(403);
-//        }
 
         return view('projects.show', ['project' => $project]);
     }
 
     public function create()
     {
-        return view('project.create');
+        return view('projects.create');
     }
 
     public function store()
     {
-        $attributes = request()->validate([
-            'title' => 'required',
-            'description' => 'required|max:100', //TODO: come back to the max:100
-            'notes' => 'min:3'
-        ]);
+        $attributes = $this->validateProjectRequest();
 
         $project = auth()->user()->projects()->create($attributes);
 
         return redirect($project->path());
+    }
+
+    public function edit(Project $project)
+    {
+        return view('projects.edit', ['project' => $project]);
     }
 
     /**
@@ -54,13 +51,23 @@ class ProjectsController extends Controller
     public function update(Project $project)
     {
         $this->authorize('update', $project);
-//        if (auth()->user()->isNot($project->user))
-//        {
-//            abort(403);
-//        }
 
-        $project->update(request(['notes']));
+        $attributes = $this->validateProjectRequest();
+
+        $project->update($attributes);
 
         return redirect($project->path());
+    }
+
+    /**
+     * @return array
+     */
+    public function validateProjectRequest(): array
+    {
+        return request()->validate([
+            'title' => 'required',
+            'description' => 'required|max:100', //TODO: come back to the max:100
+            'notes' => 'min:3'
+        ]);
     }
 }
