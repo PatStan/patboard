@@ -25,8 +25,10 @@
                             @csrf
 
                             <div class="flex items-center">
-                                <input name="body" value="{{ $task->body }}" class="w-full {{ $task->completed ? 'text-gray-400' : '' }}"/>
-                                <input name="completed" type="checkbox" onChange="this.form.submit()" {{ $task->completed ? 'checked' : ''}}>
+                                <input name="body" value="{{ $task->body }}"
+                                       class="w-full {{ $task->completed ? 'text-gray-400' : '' }}"/>
+                                <input name="completed" type="checkbox"
+                                       onChange="this.form.submit()" {{ $task->completed ? 'checked' : ''}}>
                             </div>
                         </form>
                     </div>
@@ -43,7 +45,7 @@
             {{--notes--}}
             <div>
                 <h2 class="text-lg font-normal text-slate-500 text-opacity-80 mb-3">General Notes</h2>
-                <form method ="POST" action="{{ $project->path() }}">
+                <form method="POST" action="{{ $project->path() }}">
                     @csrf
                     @method('PATCH')
                     <textarea
@@ -68,6 +70,8 @@
 
         <div class="lg:w-1/4 px-3 pt-10">
             @include('projects.card')
+
+            @include('projects.activity.card')
         </div>
     </div>
 @endsection
