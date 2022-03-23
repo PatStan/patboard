@@ -19,7 +19,8 @@ class TaskFactory extends Factory
     {
         return [
             'body' => $this->faker->sentence(),
-            'project_id' => Project::factory() // this is equal to creating a project with a closure and assigning ID it's just cleaner
+            'project_id' => Project::factory(),// this is equal to creating a project with a closure and assigning ID it's just cleaner
+            'completed' => false
         ];
     }
 }
