@@ -1,1 +1,1 @@
-You completed a task
+You completed <span class="font-bold text-black">{{ $activity->subject->body }}</span>

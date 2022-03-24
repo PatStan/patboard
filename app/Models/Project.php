@@ -15,11 +15,6 @@ class Project extends Model
         return "/projects/{$this->id}";
     }
 
-    public function recordActivity($description)
-    {
-        $this->activity()->create(['description' => $description]);
-    }
-
     public function addTask($body)
     {
         return $this->tasks()->create(['body' => $body]);
@@ -33,6 +28,11 @@ class Project extends Model
     public function tasks()
     {
         return $this->hasMany(Task::class);
+    }
+
+    public function recordActivity($description)
+    {
+        $this->activity()->create(['description' => $description]);
     }
 
     public function activity()

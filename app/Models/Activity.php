@@ -9,5 +9,10 @@ class Activity extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['project_id', 'description'];
+    protected $fillable = ['project_id', 'description', 'subject'];
+
+    public function subject()
+    {
+        return $this->morphTo();
+    }
 }
